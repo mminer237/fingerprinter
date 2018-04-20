@@ -4,7 +4,7 @@ Fingerprinter is a Java program that compares fingerprint images and finds match
 # Usage
 * Install [Java](https://java.com/).
 * Run the program. (Double-click to run the GUI.)
-	* Run `java -jar fingerprinter.jar` to run it on the command-line.
+	* Run `java -jar fingerprinter.jar [probe [candidates-folder]]` to run it on the command-line.
 * Select a probe image of a fingerprint to look for.
 * Select a folder containing images of fingerprints to look for the probe amongst.
 * Run the comparison.
