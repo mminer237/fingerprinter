@@ -132,7 +132,7 @@ public class App extends Application {
 				run(new String[0]);
 			}
 			else if (args[0].equals("--help") || args[0].equals("-help") || args[0].equals("help") || args[0].equals("-h") || args[0].equals("?")) {
-				System.out.println("Usage: java -jar fingerprinter.jar [probe [candidatesFolder]] (--default | --help)");
+				System.out.println("Usage: java -jar fingerprinter.jar [probe [candidates-folder]] (--default | --help)");
 				System.exit(0);
 				return;
 			}
