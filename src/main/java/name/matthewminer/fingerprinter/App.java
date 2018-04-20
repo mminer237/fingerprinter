@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
 import java.util.concurrent.LinkedBlockingDeque;
@@ -129,10 +130,10 @@ public class App extends Application {
 
 		if (args.length > 0) {
 			if (args[0].equals("--default") || args[0].equals("-default") || args[0].equals("-d")) {
-				run(new String[0]);
+				run();
 			}
 			else if (args[0].equals("--help") || args[0].equals("-help") || args[0].equals("help") || args[0].equals("-h") || args[0].equals("?")) {
-				System.out.println("Usage: java -jar fingerprinter.jar [probe [candidates-folder]] (--default | --help)");
+				System.out.println("Usage: java -jar fingerprinter.jar [probe [candidates-folder]] (--cache | --default | --help)");
 				System.exit(0);
 				return;
 			}
@@ -314,7 +315,11 @@ public class App extends Application {
 				@Override
 				public void handle(ActionEvent event) {
 					try {
-						run(new String[] {probeBox.getText(), candidatesBox.getText()});
+						/** Arguments to run the comparison with */
+						ArrayList<String> args = new ArrayList();
+						args.add(probeBox.getText());
+						args.add(candidatesBox.getText());
+						run(args);
 					}
 					catch(Exception e) {
 						System.out.println(e.getMessage());
@@ -363,21 +368,45 @@ public class App extends Application {
 
 	/**
 	 * Run the comparison.
+	 */
+	private void run() {
+		run(new ArrayList());
+	}
+	/**
+	 * Run the comparison.
 	 * @param	args Command line arguments passed
 	 */
 	private void run(String[] args) {
+		run(Arrays.asList(args));
+	}
+	/**
+	 * Run the comparison.
+	 * @param	args Command line arguments passed
+	 */
+	private void run(List<String> a) {
 		/** Stream of images named "probe" if none is specified */
 		DirectoryStream<Path> probesStream;
 		/** Path of the probe image file */
 		Path probePath;
+		/** Command-line arguments passed */
+		List<String> args = new ArrayList<>(a);
+		/** Command-line options passed */
+		List<String> options = new ArrayList();
+		for (Iterator<String> iter = args.listIterator(); iter.hasNext(); ) {
+			String arg = iter.next();
+			if (arg.startsWith("-")) {
+				options.add(arg);
+				iter.remove();
+			}
+		}
 		try {
 			progressBar.setProgress(-1F);
 			printMessage("Looking for probe...");
-			if (args.length > 0) {
-				printMessage(String.format("Looking for \"%s\" as probe...", args[0]));
-				probePath = Paths.get(args[0]);
+			if (args.size() > 0) {
+				printMessage(String.format("Looking for \"%s\" as probe...", args.get(0)));
+				probePath = Paths.get(args.get(0));
 				if (Files.exists(probePath) && !Files.isDirectory(probePath))
-					printMessage(String.format("Using \"%s\" as probe...", args[0]));
+					printMessage(String.format("Using \"%s\" as probe...", args.get(0)));
 				else
 					throw new Exception();
 			}
@@ -403,10 +432,10 @@ public class App extends Application {
 		Path candidatesPath;
 		try {
 			printMessage("Looking for candidates folder...");
-			if (args.length > 1) {
-				candidatesPath = Paths.get(args[1]);
+			if (args.size() > 1) {
+				candidatesPath = Paths.get(args.get(1));
 				if (Files.exists(candidatesPath))
-					printMessage(String.format("Using \"%s\" as candidates folder...", args[1]));
+					printMessage(String.format("Using \"%s\" as candidates folder...", args.get(1)));
 				else
 					throw new Exception();
 			}
@@ -431,7 +460,14 @@ public class App extends Application {
 			String json = null;
 			/** Fingerprint to try to load a cached fingerprint into */
 			Fingerprint testProbe;
-			if (inWindow && cacheCheck.isSelected()) {
+			/** Whether the program was told to cache images on the command-line */
+			boolean useCache = false;
+			if (inWindow && cacheCheck.isSelected())
+				useCache = true;
+			else if (options.size() > 0)
+				if (args.contains("-c") || args.contains("--cache"))
+					useCache = true;
+			if (useCache) {
 				Path cachePath = Paths.get(probePath.getParent().toString() + "/cache/" + probePath.getFileName().toString() + ".json");
 				if (Files.exists(cachePath)) {
 					try {
