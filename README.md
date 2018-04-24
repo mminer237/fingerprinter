@@ -1,5 +1,7 @@
-# fingerprinter
+# ![Fingerprinter Logo](src/main/resources/images/icons/icon_48.png?raw=true)Fingerprinter
 Fingerprinter is a Java program that compares fingerprint images and finds matches therein.
+
+![Screenshot of Fingerprinter](https://user-images.githubusercontent.com/2881340/39167193-cf8b3bf0-475b-11e8-980f-3c49f44a61ab.png)
 
 # Usage
 * Install [Java](https://java.com/).
