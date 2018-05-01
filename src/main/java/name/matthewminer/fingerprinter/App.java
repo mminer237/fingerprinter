@@ -73,7 +73,7 @@ import name.matthewminer.fingerprinter.App.Progress;
 
 /**
  * @author		Matthew Miner mminer237@gmail.com
- * @version		1.0
+ * @version		1.1
  * @since		1.0
  */
 public class App extends Application {
@@ -488,7 +488,7 @@ public class App extends Application {
 			Fingerprint.setAsImage(probe, probeImage);
 			
 			printMessage("Loading candidates...");
-			DirectoryStream<Path> candidatesStream = Files.newDirectoryStream(candidatesPath, "*.{png,jpg,jpeg,gif}");
+			DirectoryStream<Path> candidatesStream = Files.newDirectoryStream(candidatesPath, "*.{png,jpg,jpeg,gif,PNG,JPG,JPEG,GIF}");
 			final Progress loadCandidatesProgress = new Progress(candidatesPath.toFile().list().length);
 			Task<List<Fingerprint>> loadCandidates = new Task<List<Fingerprint>>() {
 				@Override
