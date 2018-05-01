@@ -4,7 +4,7 @@
 	<groupId>name.matthewminer.fingerprinter</groupId>
 	<artifactId>fingerprinter</artifactId>
 	<packaging>jar</packaging>
-	<version>1.0</version>
+	<version>1.1</version>
 	<name>Fingerprinter</name>
 	<url>https://fingerprinter.matthewminer.name</url>	
 	<dependencies>
